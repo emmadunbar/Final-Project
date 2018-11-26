@@ -10,35 +10,63 @@
 #def take():
 #def talk():
 
-def north():
-    if rnorth=="no":
-        print("You can't go that way")
-    else:
-        currentroom=rnorth
+def moving(comm):
+    global currentroom
+    if(comm == "west"):
+        realness="west" in dirs
+        if realness==True:
+            currentroom=(dirs["west"])
+        else:
+            print("You can't go that way")   
+    if(comm == "east"):
+        realness="east" in dirs
+        if realness==True:
+            currentroom=(dirs["east"])
+        else:
+            print("You can't go that way")  
+    if(comm == "south"):
+        realness="south" in dirs
+        if realness==True:
+            currentroom=(dirs["south"])
+        else:
+            print("You can't go that way")  
+    if(comm == "north"):
+        realness="north" in dirs
+        if realness==True:
+            currentroom=(dirs["north"])
+        else:
+            print("You can't go that way")  
 
-def south():
-    if rsouth=="no":
-        print("You can't go that way")
-    else:
-     currentroom=rsouth
 
-def west():
-    if rwest=="no":
-        print("You can't go that way")
-    else:
-        currentroom=rwest
-
-def east():
-    if reast=="no":
-        print("You can't go that way")
-    else:
-        currentroom=reast
 
 def room1():
     print("You are in room1!")
-    reast="room2"
-    rwest="no"
-    rsouth="no"
-    rnorth="no"
-    
+    directions = {"east": "room2"}
+    return directions
+
+def room2():
+    print("You are in room2!")
+    directions = {"west": "room1"}
+    return directions
+
+
 currentroom="room1"
+
+while True:
+    if currentroom=="room1":
+        dirs = room1()
+    #    print(dirs)
+    if currentroom=="room2":
+        dirs = room2()
+    com=input(">> ")
+    moving(com)
+    if com=="q":
+        break
+    
+    
+    
+    
+    
+    
+    
+    
