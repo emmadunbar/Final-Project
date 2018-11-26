@@ -1,1 +1,44 @@
-hi
+#Create a text adventure game like Wishbringer, and have different areas and puzzles and stuff
+#Figure out how to make an area, with different commands within said area
+#Figure out how to move bewteen areas
+#Figure out how to make puzzles bewteen the areas
+#Expand and make smoother
+
+#def look():
+#def pull():
+#def push():
+#def take():
+#def talk():
+
+def north():
+    if rnorth=="no":
+        print("You can't go that way")
+    else:
+        currentroom=rnorth
+
+def south():
+    if rsouth=="no":
+        print("You can't go that way")
+    else:
+     currentroom=rsouth
+
+def west():
+    if rwest=="no":
+        print("You can't go that way")
+    else:
+        currentroom=rwest
+
+def east():
+    if reast=="no":
+        print("You can't go that way")
+    else:
+        currentroom=reast
+
+def room1():
+    print("You are in room1!")
+    reast="room2"
+    rwest="no"
+    rsouth="no"
+    rnorth="no"
+    
+currentroom="room1"
