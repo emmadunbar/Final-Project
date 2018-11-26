@@ -6,7 +6,6 @@
 
 #def look():
 #def pull():
-#def push():
 #def take():
 #def talk():
 
@@ -44,15 +43,18 @@ def push(comm):
         print("You pushed the button!")
         light="on"
 
-#def look
+#def look(comm):
 
+def pull(comm):
+    if comm=="pull lever":
+        print("You pulled the lever")
 
 
 def room1(proom):
     if proom=="room1":
         pass
     else:
-        print("You are in room1!")
+        print("You are in room1! There is a button")
     directions = {"east": "room2"}
     return directions
 
@@ -70,6 +72,8 @@ def room2(lit, proom):
 currentroom="room1"
 light="off"
 preroom="no"
+
+print("Hello")
 
 while True:
     if currentroom=="room1":
