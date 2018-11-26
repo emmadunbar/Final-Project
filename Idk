@@ -39,14 +39,20 @@ def moving(comm):
 def push(comm):
     global light
     global currentroom
-    if comm=="push button" and currentroom=="room1":
+    if comm=="push":
+        print("What would you like to push?")
+    elif comm=="push button" and currentroom=="room1":
         print("You pushed the button!")
         light="on"
 
 #def look(comm):
 
 def pull(comm):
-    if comm=="pull lever":
+    global currentroom
+    global light
+    if comm=="pull":
+        print("What would you like to pull?")
+    elif comm=="pull lever" and currentroom=="room2" and light=="on":
         print("You pulled the lever")
 
 
@@ -54,17 +60,17 @@ def room1(proom):
     if proom=="room1":
         pass
     else:
-        print("You are in room1! There is a button")
+        print("You are in room1! There is a button labelled lights")
     directions = {"east": "room2"}
     return directions
 
 def room2(lit, proom):
     if lit=="on":
-        print("You are in room2! A light is on.")
+        print("You are in room2! A light is on revealing a lever in the corner.")
     elif proom=="room2":
         pass
-    else:
-        print("You are in room2!")
+    elif lit=="off":
+        print("You are in room2! The room is dark")
     directions = {"west": "room1"}
     return directions
 
@@ -73,7 +79,7 @@ currentroom="room1"
 light="off"
 preroom="no"
 
-print("Hello")
+print("Hello, welcome to the game. To play simply type what you would like to do. Commands include north, south, east, west, pull, push, look, take, and talk. Have fun!")
 
 while True:
     if currentroom=="room1":
@@ -86,6 +92,7 @@ while True:
     com=input(">> ")
     moving(com)
     push(com)
+    pull(com)
     if com=="q":
         break
     
