@@ -35,7 +35,13 @@ def moving(comm):
         if realness==True:
             currentroom=(dirs["north"])
         else:
-            print("You can't go that way")  
+            print("You can't go that way")
+
+def push(comm):
+    global light
+    if comm=="push button":
+        print("You pushed the button!")
+        light="on"
 
 
 
@@ -44,22 +50,27 @@ def room1():
     directions = {"east": "room2"}
     return directions
 
-def room2():
-    print("You are in room2!")
+def room2(lit):
+    if lit=="on":
+        print("You are in room2! A light is on.")
+    else:
+        print("You are in room2!")
     directions = {"west": "room1"}
     return directions
 
 
 currentroom="room1"
+light="off"
 
 while True:
     if currentroom=="room1":
         dirs = room1()
     #    print(dirs)
     if currentroom=="room2":
-        dirs = room2()
+        dirs = room2(light)
     com=input(">> ")
     moving(com)
+    push(com)
     if com=="q":
         break
     
