@@ -39,20 +39,28 @@ def moving(comm):
 
 def push(comm):
     global light
-    if comm=="push button":
+    global currentroom
+    if comm=="push button" and currentroom=="room1":
         print("You pushed the button!")
         light="on"
 
+#def look
 
 
-def room1():
-    print("You are in room1!")
+
+def room1(proom):
+    if proom=="room1":
+        pass
+    else:
+        print("You are in room1!")
     directions = {"east": "room2"}
     return directions
 
-def room2(lit):
+def room2(lit, proom):
     if lit=="on":
         print("You are in room2! A light is on.")
+    elif proom=="room2":
+        pass
     else:
         print("You are in room2!")
     directions = {"west": "room1"}
@@ -61,13 +69,16 @@ def room2(lit):
 
 currentroom="room1"
 light="off"
+preroom="no"
 
 while True:
     if currentroom=="room1":
-        dirs = room1()
+        dirs = room1(preroom)
+        preroom="room1"
     #    print(dirs)
     if currentroom=="room2":
-        dirs = room2(light)
+        dirs = room2(light, preroom)
+        preroom="room2"
     com=input(">> ")
     moving(com)
     push(com)
