@@ -65,10 +65,10 @@ def room1(proom):
     return directions
 
 def room2(lit, proom):
-    if lit=="on":
-        print("You are in room2! A light is on revealing a lever in the corner.")
-    elif proom=="room2":
+    if proom=="room2":
         pass
+    elif lit=="on":
+        print("You are in room2! A light is on revealing a lever in the corner.")
     elif lit=="off":
         print("You are in room2! The room is dark")
     directions = {"west": "room1"}
@@ -78,6 +78,7 @@ def room2(lit, proom):
 currentroom="room1"
 light="off"
 preroom="no"
+inventory=[]
 
 print("Hello, welcome to the game. To play simply type what you would like to do. Commands include north, south, east, west, pull, push, look, take, and talk. Have fun!")
 
