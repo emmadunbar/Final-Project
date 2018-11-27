@@ -45,8 +45,6 @@ def push(comm):
         print("You pushed the button!")
         light="on"
 
-#def look(comm):
-
 def pull(comm):
     global currentroom
     global light
@@ -57,6 +55,7 @@ def pull(comm):
         print("You pulled the lever. A door opens to a dark hallway heading north")
         door="open"
 
+def take(comm):
 
 def room1(proom):
     directions = {"east": "room2"}
@@ -86,7 +85,7 @@ def room3(proom):
     if proom=="room3":
         pass
     else:
-        print("You are in room3!")
+        print("You are in room3! A small ring lies on the ground at your feet")
 
 currentroom="room1"
 light="off"
@@ -110,6 +109,7 @@ while True:
     moving(com)
     push(com)
     pull(com)
+    take(com)
     if com=="q":
         break
     
