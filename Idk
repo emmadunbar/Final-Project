@@ -4,11 +4,6 @@
 #Figure out how to make puzzles bewteen the areas
 #Expand and make smoother
 
-#def look():
-#def pull():
-#def take():
-#def talk():
-
 def moving(comm):
     global currentroom
     if(comm == "west"):
@@ -58,28 +53,22 @@ def pull(comm):
 def take(comm):
     global currentroom
     global inventory
-    if comm=="take ring" and currentroom=="room3" and ("ring" in room3item):
+    if comm=="take":
+        print("What would you like to take?")
+    if comm=="take ring" and "ring" in roomitemdict[currentroom]:
         inventory.append("ring")
-        room3item.remove("ring")
-    if comm=="take ring" and currentroom=="room2" and ("ring" in room2item):
-        inventory.append("ring")
-        room2item.remove("ring")
-    if comm=="take ring" and currentroom=="room1" and ("ring" in room1item):
-        inventory.append("ring")
-        room1item.remove("ring")
+        roomitemdict[currentroom].remove("ring")
+        print("You took the ring!")
         
 def drop(comm):
     global currentroom
     global inventory
-    if comm=="drop ring" and ("ring" in inventory) and currentroom=="room3":
-        room3item.append("ring")
+    if comm=="drop":
+        print("What would you like to drop?")
+    if comm=="drop ring" and ("ring" in inventory):
+        roomitemdict[currentroom].append("ring")
         inventory.remove("ring")
-    if comm=="drop ring" and ("ring" in inventory) and currentroom=="room2":
-        room2item.append("ring")
-        inventory.remove("ring")
-    if comm=="drop ring" and ("ring" in inventory) and currentroom=="room1":
-        room1item.append("ring")
-        inventory.remove("ring")
+        print("You dropped the ring!")
 
 
 def room1(proom):
@@ -96,21 +85,22 @@ def room2(lit, proom, dor):
         directions = {"west": "room1", "north": "room3"}
     if proom=="room2":
         pass
-    elif dor=="open" and proom!="room2":
-        print("You are in room2! A light is on revealing a lever in the corner, and a hallway leads north")
-        directions = {"west": "room1", "north": "room3"}  
-    elif lit=="on" and dor=="no":
-        print("You are in room2! A light is on revealing a lever in the corner.")
-    elif lit=="off":
-        print("You are in room2! The room is dark")
+    elif proom!="room2":
+        print("You are in room2!")
+        if dor=="open":
+            print("A hallway leads north")
+        if lit=="on":
+            print("A light is on revealing a lever in the corner.")
+        if lit=="off":
+            print("The room is dark")
     return directions
 
 def room3(proom):
     directions = {"south": "room2"}  
     if proom=="room3":
         pass
-    else:
-        print("You are in room3! A small ring lies on the ground at your feet")
+    if proom!="room3":
+        print("You are in room3!")
     return directions
 
 currentroom="room1"
@@ -120,7 +110,9 @@ inventory=[]
 door="no"
 room1item=[]
 room2item=[]
-room3item=["ring"]
+room3item=[]
+roomitemdict={"room1":room1item, "room2":room2item, "room3":room3item}
+roomitemdict["room3" ].append("ring")
 
 print("Hello, welcome to the game. To play simply type what you would like to do. Commands include north, south, east, west, pull, push, look, take, drop, and talk. To end the game type 'quit'. Have fun!")
 
@@ -128,18 +120,12 @@ while True:
     if currentroom=="room1":
         dirs = room1(preroom)
         preroom="room1"
-        print(inventory)
-        print(room1item)
     if currentroom=="room2":
         dirs = room2(light, preroom, door)
         preroom="room2"
-        print(inventory)
-        print(room2item)
     if currentroom=="room3":
         dirs = room3(preroom)
         preroom="room3"
-        print(inventory)
-        print(room3item)
     com=input(">> ")
     moving(com)
     push(com)
