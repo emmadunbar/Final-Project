@@ -32,7 +32,7 @@ def push(comm):
     global light
     global currentroom
     global motherdoor
-    global kicthendoor
+    global kitchendoor
     if comm=="push":
         print("What would you like to push?")
     elif comm=="push button" and currentroom=="room1" and light=="off":
@@ -42,7 +42,7 @@ def push(comm):
         print("You pushed the button! The lights in the hallway turn off")
         light="off"
     elif comm=="push lever" and currentroom=="room2" and light=="on":
-        print("You pushed the lever!")
+        print("You pushed the lever. A door opens to the east")
         motherdoor="no"
         kitchendoor="open"
 
@@ -86,7 +86,7 @@ def drop(comm):
         inventory.remove("cabbage")
         print("You dropped the cabbage!")
 
-def look(comm, lit, motherdor):
+def look(comm, lit, motherdor, kitchendor, maindor):
     global currentroom
     if comm=="look" and currentroom=="room1":
         print("There is small button in the corner that is used to operate the castle lights. There is a doorway that leads to a hallway to the east")
@@ -98,7 +98,7 @@ def look(comm, lit, motherdor):
             print("A light is on revealing a lever in the corner")
             if motherdor=="open":
                 print("An open door leads to the north")
-            if kitchendoor=="open":
+            if kitchendor=="open":
                 print("An open door leads east")
             roomcontent()
     if comm=="look" and currentroom=="room3":
@@ -113,6 +113,25 @@ def look(comm, lit, motherdor):
         if lit=="on":
             print("An open door leads to the west, and another door leads to the north")
             roomcontent()
+    if comm=="look" and currentroom=="room5":
+        if lit=="off":
+            print("The entrance hallway is dark. Above the door spelled out in some kind of glow in the dark fluid are the numbers 5314")
+        if lit=="on" and maindor=="no":
+            print("An open door leads to south, and there is another closed door to the east. It appears there is somesort of keypad to the side of the door. One might imagine that if one typed in the correct four digit number code the door may open. There is also a note that says 'Answers often reveal themselves in the DARKEST of times'")
+            roomcontent()
+        if lit=="on" and maindor=="open":
+            print("An open door leads to south, and another open door to the east leads to the outside world")
+            roomcontent()
+        
+            
+def inventorycom(comm, maindor):
+    global currentroom
+    if comm=="inventory" and inventory!=[]:
+        print(inventory)
+    if comm=="inventory" and inventory==[]:
+        print("You are carrying nothing")
+    if comm=="5314" and currentroom=="room5":
+        maindor="open"
     
 
 def room1(proom):
@@ -144,12 +163,22 @@ def room3(proom):
     return directions
 
 def room4(proom):
-    directions = {"west":"room2"}
+    directions = {"west":"room2", "north":"room5"}
     if proom=="room4":
         pass
     elif proom!="room4":
         print("You are in the kitchen")
     return directions
+    
+def room5(proom, maindor):
+    directions = {"south":"room4"}
+    if maindor=="open":
+        directions = {"south":"room4", "east":"room6"}
+    if proom=="room5":
+        pass
+    elif proom!="room5":
+        print("You are in the entrance hallway")
+    return directions   
 
 
 def roomcontent():
@@ -164,11 +193,13 @@ preroom="room1"
 inventory=[]
 motherdoor="no"
 kitchendoor="no"
+maindoor="no"
 room1item=[]
 room2item=[]
 room3item=[]
 room4item=[]
-roomitemdict={"room1":room1item, "room2":room2item, "room3":room3item, "room4":room4item}
+room5item=[]
+roomitemdict={"room1":room1item, "room2":room2item, "room3":room3item, "room4":room4item, "room5":room5item}
 roomitemdict["room3"].append("ring")
 roomitemdict["room4"].append("cabbage")
 
@@ -188,12 +219,73 @@ while True:
     if currentroom=="room4":
         dirs = room4(preroom)
         preroom = "room4"
+    if currentroom=="room5":
+        dirs = room5(preroom, maindoor)
+        preroom="room5"
     com=input(">> ")
     moving(com)
     push(com)
     pull(com)
     take(com)
     drop(com)
-    look(com, light, motherdoor)
+    look(com, light, motherdoor, kitchendoor, maindoor)
+    inventorycom(com, maindoor)
     if com=="quit":
-        break    
+        break  
+    
+#extra special super fun puzzle
+
+
+lshore1=["cabbage", "sheep", "wolf"]
+lshore2=[]
+reset="off"
+
+currentroom="room6"
+puzzle="on"
+
+def sheeppuzzle(comm):
+    global currentroom
+    global reset
+    global lshore1
+    global lshore2
+    global puzzle
+    if puzzle=="on":
+        if comm=="sheep" or comm=="cabbage" or comm=="wolf" or comm=="nothing":
+            if currentroom=="room6":
+                if comm in lshore1:
+                    lshore2.append(comm)
+                    lshore1.remove(comm)      
+                    currentroom="room7"
+                    print(lshore1)
+                    print(lshore2)
+                if comm=="nothing":
+                    currentroom="room7"
+                shore2string= ", and a ".join(lshore2)
+                print("You are on the second shore with a " + shore2string + "")
+            elif currentroom=="room7":
+                if comm in lshore2:
+                    lshore1.append(comm)
+                    lshore2.remove(comm)
+                    currentroom="room6"
+                    print(lshore1)
+                    print(lshore2)
+                if comm=="nothing":
+                    currentroom="room6"
+                shore1string= ", and a ".join(lshore1)
+                print("You are on the first shore with a " + shore1string + "")
+            if (("sheep" in lshore1 and "wolf" in lshore1 and currentroom=="room7") or ("sheep" in lshore2 and "wolf" in lshore2 and currentroom=="room6") or ("cabbage" in lshore1 and "sheep" in lshore1 and currentroom=="room7") or ("cabbage" in lshore2 and "sheep" in lshore2 and currentroom=="room6")):
+                reset="on"
+                print("You have failed, the puzzle magically resets and you are sent back to th first shore")
+                currentroom="room6"
+    if reset=="on":
+        lshore1=["cabbage", "sheep", "wolf"]
+        lshore2=[]
+        reset="off"
+        print("reset")
+
+
+while True:
+    com=input(">>")
+    sheeppuzzle(com)
+    if com=="quit":
+        break
