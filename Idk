@@ -32,7 +32,7 @@ def push(comm):
     global light
     global currentroom
     global motherdoor
-    global livingdoor
+    global kicthendoor
     if comm=="push":
         print("What would you like to push?")
     elif comm=="push button" and currentroom=="room1" and light=="off":
@@ -44,19 +44,19 @@ def push(comm):
     elif comm=="push lever" and currentroom=="room2" and light=="on":
         print("You pushed the lever!")
         motherdoor="no"
-        livingdoor="open"
+        kitchendoor="open"
 
 def pull(comm):
     global currentroom
     global light
     global motherdoor
-    global livingdoor
+    global kitchendoor
     if comm=="pull":
         print("What would you like to pull?")
     elif comm=="pull lever" and currentroom=="room2" and light=="on":
         print("You pulled the lever. A door opens to the north")
         motherdoor="open"
-        livingdoor="no"
+        kitchendoor="no"
 
 def take(comm):
     global currentroom
@@ -67,6 +67,10 @@ def take(comm):
         inventory.append("ring")
         roomitemdict[currentroom].remove("ring")
         print("You took the ring!")
+    if comm=="take cabbage" and "cabbage" in roomitemdict[currentroom]:
+        inventory.append("cabbage")
+        roomitemdict[currentroom].remove("cabbage")
+        print("You took the cabbage!")
 
 def drop(comm):
     global currentroom
@@ -77,6 +81,10 @@ def drop(comm):
         roomitemdict[currentroom].append("ring")
         inventory.remove("ring")
         print("You dropped the ring!")
+    if comm=="drop cabbage" and ("cabbage" in inventory):
+        roomitemdict[currentroom].append("cabbage")
+        inventory.remove("cabbage")
+        print("You dropped the cabbage!")
 
 def look(comm, lit, motherdor):
     global currentroom
@@ -90,20 +98,20 @@ def look(comm, lit, motherdor):
             print("A light is on revealing a lever in the corner")
             if motherdor=="open":
                 print("An open door leads to the north")
-            if livingdoor=="open":
+            if kitchendoor=="open":
                 print("An open door leads east")
             roomcontent()
     if comm=="look" and currentroom=="room3":
-        print("An open door leads to a hallway to the south")
         if lit=="off":
             print("The bedroom is dark")
         if lit=="on":
+            print("An open door leads to a hallway to the south")
             roomcontent()
     if comm=="look" and currentroom=="room4":
-        print("An open door leads to the west")
         if lit=="off":
-            print("The living room is dark")
+            print("The kitchen is dark")
         if lit=="on":
+            print("An open door leads to the west, and another door leads to the north")
             roomcontent()
     
 
@@ -115,11 +123,11 @@ def room1(proom):
         print("You are in your bedchamber")
     return directions
 
-def room2(proom, motherdor, livingdor):
+def room2(proom, motherdor, kitchendor):
     directions = {"west": "room1"}
     if motherdor=="open":
         directions = {"west": "room1", "north": "room3"}
-    if livingdor=="open":
+    if kitchendor=="open":
         directions = {"west" : "room1", "east": "room4"}
     if proom=="room2":
         pass
@@ -140,25 +148,29 @@ def room4(proom):
     if proom=="room4":
         pass
     elif proom!="room4":
-        print("You are in your livng room")
+        print("You are in the kitchen")
     return directions
+
 
 def roomcontent():
     if "ring" in roomitemdict[currentroom]:
         print("There is a ring in this room")
+    if "cabbage" in roomitemdict[currentroom]:
+        print("There is a cabbage in this room")
 
 currentroom="room1"
 light="off"
 preroom="room1"
 inventory=[]
 motherdoor="no"
-livingdoor="no"
+kitchendoor="no"
 room1item=[]
 room2item=[]
 room3item=[]
 room4item=[]
 roomitemdict={"room1":room1item, "room2":room2item, "room3":room3item, "room4":room4item}
-roomitemdict["room3" ].append("ring")
+roomitemdict["room3"].append("ring")
+roomitemdict["room4"].append("cabbage")
 
 print("Hello, welcome to the game. To play simply type what you would like to do. Commands include north, south, east, west, pull, push, look, take, drop, and talk. To end the game type 'quit'. Have fun!")
 print("You awaken in your large plush bed to the sound of birds chirping through your open window, and light streams in and fills the previously dark corners of your bedchamber")
@@ -168,7 +180,7 @@ while True:
         dirs = room1(preroom)
         preroom="room1"
     if currentroom=="room2":
-        dirs = room2(preroom, motherdoor, livingdoor)
+        dirs = room2(preroom, motherdoor, kitchendoor)
         preroom="room2"
     if currentroom=="room3":
         dirs = room3(preroom)
