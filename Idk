@@ -78,13 +78,17 @@ def drop(comm):
     global puzzle
     if comm=="drop":
         print("What would you like to drop?")
-    if comm=="drop ring" and ("ring" in inventory):
+    if comm=="drop ring" and currentroom=="room10" and ("ring" in inventory):
+        inventory.remove("ring")
+        maiden="wife"
+    elif comm=="drop ring" and ("ring" in inventory):
         roomitemdict[currentroom].append("ring")
         inventory.remove("ring")
         print("You dropped the ring!")
     if comm=="drop cabbage" and ("cabbage" in inventory) and currentroom=="room8":
         print("You gave the cabbage to the farmer")
         puzzle="on"
+        inventory.remove("cabbage")
     elif comm=="drop cabbage" and ("cabbage" in inventory):
         roomitemdict[currentroom].append("cabbage")
         inventory.remove("cabbage")
@@ -134,7 +138,8 @@ def look(comm, lit, motherdor, kitchendor, maindor):
             print("If you were to give him a cabbage he would ask for your help to move his items across the river. His boat may only take one person and one item at a time, so yourself and the cabbage for example. If at any time the wolf and sheep, or the sheep and the cabbage are alone on a shore the former will eat the latter, and the farmer will not take you across.")
     if comm=="look" and currentroom=="room9" :
         print("You are on the east shore of a river. A beautiful wooded path leads to the south, and you feel strangely pulled in that direction")
-    
+    if comm=="look" and currentroom=="room10":
+        print("You enter a meadow filled with yellow, red and purple flowers. Sitting in the middle of this is a beautiful woman
             
 def inventorycom(comm, maindor):
     global currentroom
@@ -214,6 +219,9 @@ def room10(proom):
     directions = {"north": "room9"}
     if proom=="room10":
         pass
+    elif proom!="room10":
+        print("You are in a flowery meadow")
+    return directions
 
 
 def roomcontent():
@@ -281,6 +289,7 @@ room4item=[]
 room5item=[]
 room8item=[]
 room9item=[]
+room10item=[]
 roomitemdict={"room1":room1item, "room2":room2item, "room3":room3item, "room4":room4item, "room5":room5item, "room8":room8item, "room9":room9item}
 roomitemdict["room3"].append("ring")
 roomitemdict["room4"].append("cabbage")
@@ -292,7 +301,7 @@ x="no"
 
 
 print("Hello, welcome to the game. To play simply type what you would like to do. Commands include north, south, east, west, pull, push, look, take, drop, and talk. To end the game type 'quit'. Have fun!")
-game=input("You awaken in your large bed to the sound of birds chirping through your open window, and light streams in and fills the previously dark corners of your bedroom. Today is the day, you will finally go out into the world and find true love. Are you ready?")
+game=input("You awaken in your large bed to the sound of birds chirping through your open window, and light streams in and fills the previously dark corners of your bedroom. Today is the day, you will finally go out into the world and find your one true love. Are you ready?")
 
 if game=="yes":
     x=True
