@@ -75,13 +75,17 @@ def take(comm):
 def drop(comm):
     global currentroom
     global inventory
+    global puzzle
     if comm=="drop":
         print("What would you like to drop?")
     if comm=="drop ring" and ("ring" in inventory):
         roomitemdict[currentroom].append("ring")
         inventory.remove("ring")
         print("You dropped the ring!")
-    if comm=="drop cabbage" and ("cabbage" in inventory):
+    if comm=="drop cabbage" and ("cabbage" in inventory) and currentroom=="room8":
+        print("You gave the cabbage to the farmer")
+        puzzle="on"
+    elif comm=="drop cabbage" and ("cabbage" in inventory):
         roomitemdict[currentroom].append("cabbage")
         inventory.remove("cabbage")
         print("You dropped the cabbage!")
@@ -89,7 +93,7 @@ def drop(comm):
 def look(comm, lit, motherdor, kitchendor, maindor):
     global currentroom
     if comm=="look" and currentroom=="room1":
-        print("There is small button in the corner that is used to operate the castle lights. There is a doorway that leads to a hallway to the east")
+        print("There is small button in the corner that is used to operate the lights. There is a doorway that leads to a hallway to the east")
         roomcontent()
     if comm=="look" and currentroom=="room2":
         if lit=="off":
@@ -122,7 +126,15 @@ def look(comm, lit, motherdor, kitchendor, maindor):
         if lit=="on" and maindor=="open":
             print("An open door leads to south, and another open door to the east leads to the outside world")
             roomcontent()
-        
+    if comm=="look" and currentroom=="room8":
+        if puzzle=="on":
+            print("The farmer anxiously awaits your next move")
+        else:
+            print("You are on west shore of a river which looks too deep to swim across. A farmer stands by the shore with a boat, a wolf and a sheep. As you approach he asks if you're in need of a ride across. You say yes, because you are in need of one, and he says he will do it for the price of one cabbage, and your help")
+            print("If you were to give him a cabbage he would ask for your help to move his items across the river. His boat may only take one person and one item at a time, so yourself and the cabbage for example. If at any time the wolf and sheep, or the sheep and the cabbage are alone on a shore the former will eat the latter, and the farmer will not take you across.")
+    if comm=="look" and currentroom=="room9" :
+        print("You are on the east shore of a river. A beautiful wooded path leads to the south, and you feel strangely pulled in that direction")
+    
             
 def inventorycom(comm, maindor):
     global currentroom
@@ -173,12 +185,35 @@ def room4(proom):
 def room5(proom, maindor):
     directions = {"south":"room4"}
     if maindor=="open":
-        directions = {"south":"room4", "east":"room6"}
+        directions = {"south":"room4", "east":"room8"}
     if proom=="room5":
         pass
     elif proom!="room5":
         print("You are in the entrance hallway")
     return directions   
+    
+def room8(proom):
+    directions = {"west":"room5"}
+    if puzzle=="done":
+        directions = {"west":"room5", "east":"room9"}
+    if proom=="room8":
+        pass
+    elif proom!="room8":
+        print("You are on the first shore of a river")
+    return directions
+    
+def room9(proom):
+    directions = {"west":"room8", "south": "room10"}
+    if proom=="room9":
+        pass
+    elif proom!="room9":
+        print("You are on the first shore of a river")
+    return directions
+    
+def room10(proom):
+    directions = {"north": "room9"}
+    if proom=="room10":
+        pass
 
 
 def roomcontent():
@@ -187,62 +222,6 @@ def roomcontent():
     if "cabbage" in roomitemdict[currentroom]:
         print("There is a cabbage in this room")
 
-currentroom="room1"
-light="off"
-preroom="room1"
-inventory=[]
-motherdoor="no"
-kitchendoor="no"
-maindoor="no"
-room1item=[]
-room2item=[]
-room3item=[]
-room4item=[]
-room5item=[]
-roomitemdict={"room1":room1item, "room2":room2item, "room3":room3item, "room4":room4item, "room5":room5item}
-roomitemdict["room3"].append("ring")
-roomitemdict["room4"].append("cabbage")
-
-print("Hello, welcome to the game. To play simply type what you would like to do. Commands include north, south, east, west, pull, push, look, take, drop, and talk. To end the game type 'quit'. Have fun!")
-print("You awaken in your large plush bed to the sound of birds chirping through your open window, and light streams in and fills the previously dark corners of your bedchamber")
-
-while True:
-    if currentroom=="room1":
-        dirs = room1(preroom)
-        preroom="room1"
-    if currentroom=="room2":
-        dirs = room2(preroom, motherdoor, kitchendoor)
-        preroom="room2"
-    if currentroom=="room3":
-        dirs = room3(preroom)
-        preroom="room3"
-    if currentroom=="room4":
-        dirs = room4(preroom)
-        preroom = "room4"
-    if currentroom=="room5":
-        dirs = room5(preroom, maindoor)
-        preroom="room5"
-    com=input(">> ")
-    moving(com)
-    push(com)
-    pull(com)
-    take(com)
-    drop(com)
-    look(com, light, motherdoor, kitchendoor, maindoor)
-    inventorycom(com, maindoor)
-    if com=="quit":
-        break  
-    
-#extra special super fun puzzle
-
-
-lshore1=["cabbage", "sheep", "wolf"]
-lshore2=[]
-reset="off"
-
-currentroom="room6"
-puzzle="on"
-
 def sheeppuzzle(comm):
     global currentroom
     global reset
@@ -250,6 +229,7 @@ def sheeppuzzle(comm):
     global lshore2
     global puzzle
     if puzzle=="on":
+        print("Type either sheep, cabbage, wolf, or nothing to determine what you take across the river")
         if comm=="sheep" or comm=="cabbage" or comm=="wolf" or comm=="nothing":
             if currentroom=="room6":
                 if comm in lshore1:
@@ -277,15 +257,78 @@ def sheeppuzzle(comm):
                 reset="on"
                 print("You have failed, the puzzle magically resets and you are sent back to th first shore")
                 currentroom="room6"
+            if ("sheep" in lshore2 and "wolf" in lshore2 and "cabbage" in lshore2):
+                puzzle=="done"
+                currentroom=="room9"
+                print("You finished the puzzle! The farmer thanks you and says he will leave his boat here tied up in case you need to get back across the river.")
     if reset=="on":
         lshore1=["cabbage", "sheep", "wolf"]
         lshore2=[]
         reset="off"
         print("reset")
 
+currentroom="room1"
+light="off"
+preroom="room1"
+inventory=[]
+motherdoor="no"
+kitchendoor="no"
+maindoor="no"
+room1item=[]
+room2item=[]
+room3item=[]
+room4item=[]
+room5item=[]
+room8item=[]
+room9item=[]
+roomitemdict={"room1":room1item, "room2":room2item, "room3":room3item, "room4":room4item, "room5":room5item, "room8":room8item, "room9":room9item}
+roomitemdict["room3"].append("ring")
+roomitemdict["room4"].append("cabbage")
+lshore1=["cabbage", "sheep", "wolf"]
+lshore2=[]
+reset="off"
+puzzle="off"
+x="no"
 
-while True:
-    com=input(">>")
+
+print("Hello, welcome to the game. To play simply type what you would like to do. Commands include north, south, east, west, pull, push, look, take, drop, and talk. To end the game type 'quit'. Have fun!")
+game=input("You awaken in your large bed to the sound of birds chirping through your open window, and light streams in and fills the previously dark corners of your bedroom. Today is the day, you will finally go out into the world and find true love. Are you ready?")
+
+if game=="yes":
+    x=True
+
+    
+
+while x==True:
+    if currentroom=="room1":
+        dirs = room1(preroom)
+        preroom="room1"
+    if currentroom=="room2":
+        dirs = room2(preroom, motherdoor, kitchendoor)
+        preroom="room2"
+    if currentroom=="room3":
+        dirs = room3(preroom)
+        preroom="room3"
+    if currentroom=="room4":
+        dirs = room4(preroom)
+        preroom = "room4"
+    if currentroom=="room5":
+        dirs = room5(preroom, maindoor)
+        preroom="room5"
+    if currentroom=="room8":
+        dirs = room8(preroom)
+        preroom="room8"
+    com=input(">> ")
+    moving(com)
+    push(com)
+    pull(com)
+    take(com)
+    drop(com)
     sheeppuzzle(com)
+    look(com, light, motherdoor, kitchendoor, maindoor)
+    inventorycom(com, maindoor)
     if com=="quit":
-        break
+        break  
+
+
+
