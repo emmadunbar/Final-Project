@@ -93,6 +93,7 @@ def drop(comm):
         roomitemdict[currentroom].append("cabbage")
         inventory.remove("cabbage")
         print("You dropped the cabbage!")
+    
 
 def look(comm, lit, motherdor, kitchendor, maindor):
     global currentroom
@@ -139,7 +140,7 @@ def look(comm, lit, motherdor, kitchendor, maindor):
     if comm=="look" and currentroom=="room9" :
         print("You are on the east shore of a river. A beautiful wooded path leads to the south, and you feel strangely pulled in that direction")
     if comm=="look" and currentroom=="room10":
-        print("You enter a meadow filled with yellow, red and purple flowers. Sitting in the middle of this is a beautiful woman
+        print("You enter a meadow filled with yellow, red and purple flowers. Sitting in the middle of this is a beautiful woman. You've met her before, and you know that she's the one you've been searching for. You know what you must do, you need to give her a ring and seal your love together forever.")
             
 def inventorycom(comm, maindor):
     global currentroom
@@ -336,6 +337,9 @@ while x==True:
     sheeppuzzle(com)
     look(com, light, motherdoor, kitchendoor, maindoor)
     inventorycom(com, maindoor)
+    if maiden="wife":
+        print("Congratulations, you have found true love and won the game!")
+        break
     if com=="quit":
         break  
 
