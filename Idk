@@ -94,7 +94,6 @@ def drop(comm):
         inventory.remove("cabbage")
         print("You dropped the cabbage!")
     
-
 def look(comm, lit, motherdor, kitchendor, maindor):
     global currentroom
     if comm=="look" and currentroom=="room1":
@@ -151,6 +150,57 @@ def inventorycom(comm, maindor):
     if comm=="5314" and currentroom=="room5":
         maindor="open"
     
+def roomcontent():
+    if "ring" in roomitemdict[currentroom]:
+        print("There is a ring in this room")
+    if "cabbage" in roomitemdict[currentroom]:
+        print("There is a cabbage in this room")
+
+def sheeppuzzle(comm):
+    global currentroom
+    global reset
+    global lshore1
+    global lshore2
+    global puzzle
+    if puzzle=="on":
+        print("Type either sheep, cabbage, wolf, or nothing to determine what you take across the river")
+        if comm=="sheep" or comm=="cabbage" or comm=="wolf" or comm=="nothing":
+            if currentroom=="room6":
+                if comm in lshore1:
+                    lshore2.append(comm)
+                    lshore1.remove(comm)      
+                    currentroom="room7"
+                    print(lshore1)
+                    print(lshore2)
+                if comm=="nothing":
+                    currentroom="room7"
+                shore2string= ", and a ".join(lshore2)
+                print("You are on the second shore with a " + shore2string + "")
+            elif currentroom=="room7":
+                if comm in lshore2:
+                    lshore1.append(comm)
+                    lshore2.remove(comm)
+                    currentroom="room6"
+                    print(lshore1)
+                    print(lshore2)
+                if comm=="nothing":
+                    currentroom="room6"
+                shore1string= ", and a ".join(lshore1)
+                print("You are on the first shore with a " + shore1string + "")
+            if (("sheep" in lshore1 and "wolf" in lshore1 and currentroom=="room7") or ("sheep" in lshore2 and "wolf" in lshore2 and currentroom=="room6") or ("cabbage" in lshore1 and "sheep" in lshore1 and currentroom=="room7") or ("cabbage" in lshore2 and "sheep" in lshore2 and currentroom=="room6")):
+                reset="on"
+                print("You have failed, the puzzle magically resets and you are sent back to th first shore")
+                currentroom="room6"
+            if ("sheep" in lshore2 and "wolf" in lshore2 and "cabbage" in lshore2):
+                puzzle=="done"
+                currentroom=="room9"
+                print("You finished the puzzle! The farmer thanks you and says he will leave his boat here tied up in case you need to get back across the river.")
+    if reset=="on":
+        lshore1=["cabbage", "sheep", "wolf"]
+        lshore2=[]
+        reset="off"
+        print("reset")
+
 
 def room1(proom):
     directions = {"east": "room2"}
@@ -225,57 +275,6 @@ def room10(proom):
     return directions
 
 
-def roomcontent():
-    if "ring" in roomitemdict[currentroom]:
-        print("There is a ring in this room")
-    if "cabbage" in roomitemdict[currentroom]:
-        print("There is a cabbage in this room")
-
-def sheeppuzzle(comm):
-    global currentroom
-    global reset
-    global lshore1
-    global lshore2
-    global puzzle
-    if puzzle=="on":
-        print("Type either sheep, cabbage, wolf, or nothing to determine what you take across the river")
-        if comm=="sheep" or comm=="cabbage" or comm=="wolf" or comm=="nothing":
-            if currentroom=="room6":
-                if comm in lshore1:
-                    lshore2.append(comm)
-                    lshore1.remove(comm)      
-                    currentroom="room7"
-                    print(lshore1)
-                    print(lshore2)
-                if comm=="nothing":
-                    currentroom="room7"
-                shore2string= ", and a ".join(lshore2)
-                print("You are on the second shore with a " + shore2string + "")
-            elif currentroom=="room7":
-                if comm in lshore2:
-                    lshore1.append(comm)
-                    lshore2.remove(comm)
-                    currentroom="room6"
-                    print(lshore1)
-                    print(lshore2)
-                if comm=="nothing":
-                    currentroom="room6"
-                shore1string= ", and a ".join(lshore1)
-                print("You are on the first shore with a " + shore1string + "")
-            if (("sheep" in lshore1 and "wolf" in lshore1 and currentroom=="room7") or ("sheep" in lshore2 and "wolf" in lshore2 and currentroom=="room6") or ("cabbage" in lshore1 and "sheep" in lshore1 and currentroom=="room7") or ("cabbage" in lshore2 and "sheep" in lshore2 and currentroom=="room6")):
-                reset="on"
-                print("You have failed, the puzzle magically resets and you are sent back to th first shore")
-                currentroom="room6"
-            if ("sheep" in lshore2 and "wolf" in lshore2 and "cabbage" in lshore2):
-                puzzle=="done"
-                currentroom=="room9"
-                print("You finished the puzzle! The farmer thanks you and says he will leave his boat here tied up in case you need to get back across the river.")
-    if reset=="on":
-        lshore1=["cabbage", "sheep", "wolf"]
-        lshore2=[]
-        reset="off"
-        print("reset")
-
 currentroom="room1"
 light="off"
 preroom="room1"
@@ -283,6 +282,11 @@ inventory=[]
 motherdoor="no"
 kitchendoor="no"
 maindoor="no"
+reset="off"
+puzzle="off"
+x="no"
+maiden="girl"
+
 room1item=[]
 room2item=[]
 room3item=[]
@@ -291,24 +295,21 @@ room5item=[]
 room8item=[]
 room9item=[]
 room10item=[]
+
 roomitemdict={"room1":room1item, "room2":room2item, "room3":room3item, "room4":room4item, "room5":room5item, "room8":room8item, "room9":room9item}
 roomitemdict["room3"].append("ring")
 roomitemdict["room4"].append("cabbage")
+
 lshore1=["cabbage", "sheep", "wolf"]
 lshore2=[]
-reset="off"
-puzzle="off"
-x="no"
-maiden="girl"
 
 
 print("Hello, welcome to the game. To play simply type what you would like to do. Commands include north, south, east, west, pull, push, look, take, drop, and inventory. To end the game type 'quit'. Have fun!")
 game=input("You awaken in your large bed to the sound of birds chirping through your open window, and light streams in and fills the previously dark corners of your bedroom. Today is the day, you will finally go out into the world and find your one true love. Are you ready?")
 
+
 if game=="yes":
     x=True
-
-    
 
 while x==True:
     if currentroom=="room1":
