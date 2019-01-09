@@ -88,6 +88,7 @@ def drop(comm):
     if comm=="drop cabbage" and ("cabbage" in inventory) and currentroom=="room8":
         print("You gave the cabbage to the farmer")
         puzzle="on"
+        currentroom="room6"
         inventory.remove("cabbage")
     elif comm=="drop cabbage" and ("cabbage" in inventory):
         roomitemdict[currentroom].append("cabbage")
@@ -141,14 +142,16 @@ def look(comm, lit, motherdor, kitchendor, maindor):
     if comm=="look" and currentroom=="room10":
         print("You enter a meadow filled with yellow, red and purple flowers. Sitting in the middle of this is a beautiful woman. You've met her before, and you know that she's the one you've been searching for. You know what you must do, you need to give her a ring and seal your love together forever.")
             
-def inventorycom(comm, maindor):
+def inventorycom(comm):
     global currentroom
+    global maindoor
     if comm=="inventory" and inventory!=[]:
         print(inventory)
     if comm=="inventory" and inventory==[]:
         print("You are carrying nothing")
     if comm=="5314" and currentroom=="room5":
-        maindor="open"
+        maindoor="open"
+        print("The door to the east opens")
     
 def roomcontent():
     if "ring" in roomitemdict[currentroom]:
@@ -170,8 +173,6 @@ def sheeppuzzle(comm):
                     lshore2.append(comm)
                     lshore1.remove(comm)      
                     currentroom="room7"
-                    print(lshore1)
-                    print(lshore2)
                 if comm=="nothing":
                     currentroom="room7"
                 shore2string= ", and a ".join(lshore2)
@@ -181,8 +182,6 @@ def sheeppuzzle(comm):
                     lshore1.append(comm)
                     lshore2.remove(comm)
                     currentroom="room6"
-                    print(lshore1)
-                    print(lshore2)
                 if comm=="nothing":
                     currentroom="room6"
                 shore1string= ", and a ".join(lshore1)
@@ -275,7 +274,8 @@ def room10(proom):
     return directions
 
 
-currentroom="room1"
+#currentroom="room1"
+currentroom="room6"
 light="off"
 preroom="room1"
 inventory=[]
@@ -283,7 +283,8 @@ motherdoor="no"
 kitchendoor="no"
 maindoor="no"
 reset="off"
-puzzle="off"
+#puzzle="off"
+puzzle="on"
 x="no"
 maiden="girl"
 
@@ -338,7 +339,7 @@ while x==True:
     drop(com)
     sheeppuzzle(com)
     look(com, light, motherdoor, kitchendoor, maindoor)
-    inventorycom(com, maindoor)
+    inventorycom(com)
     if maiden=="wife":
         print("Congratulations, you have found true love and won the game!")
         break
