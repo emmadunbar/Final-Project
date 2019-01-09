@@ -76,11 +76,13 @@ def drop(comm):
     global currentroom
     global inventory
     global puzzle
+    global maiden
     if comm=="drop":
         print("What would you like to drop?")
     if comm=="drop ring" and currentroom=="room10" and ("ring" in inventory):
         inventory.remove("ring")
         maiden="wife"
+        print("The maiden picks up the ring and looks at you with love in her eyes")
     elif comm=="drop ring" and ("ring" in inventory):
         roomitemdict[currentroom].append("ring")
         inventory.remove("ring")
@@ -131,12 +133,14 @@ def look(comm, lit, motherdor, kitchendor, maindor):
         if lit=="on" and maindor=="open":
             print("An open door leads to south, and another open door to the east leads to the outside world")
             roomcontent()
-    if comm=="look" and currentroom=="room8":
+    if comm=="look" and currentroom=="room8" and puzzle!="done":
         if puzzle=="on":
             print("The farmer anxiously awaits your next move")
         else:
             print("You are on west shore of a river which looks too deep to swim across. A farmer stands by the shore with a boat, a wolf and a sheep. As you approach he asks if you're in need of a ride across. You say yes, because you are in need of one, and he says he will do it for the price of one cabbage, and your help")
             print("If you were to give him a cabbage he would ask for your help to move his items across the river. His boat may only take one person and one item at a time, so yourself and the cabbage for example. If at any time the wolf and sheep, or the sheep and the cabbage are alone on a shore the former will eat the latter, and the farmer will not take you across.")
+    elif comm=="look" and currentroom=="room8" and puzzle=="done":
+        print("You are on the west shore of a river. An open door leading into a castle is to the west.")
     if comm=="look" and currentroom=="room9" :
         print("You are on the east shore of a river. A beautiful wooded path leads to the south, and you feel strangely pulled in that direction")
     if comm=="look" and currentroom=="room10":
@@ -191,8 +195,8 @@ def sheeppuzzle(comm):
                 print("You have failed, the puzzle magically resets and you are sent back to th first shore")
                 currentroom="room6"
             if ("sheep" in lshore2 and "wolf" in lshore2 and "cabbage" in lshore2):
-                puzzle=="done"
-                currentroom=="room9"
+                puzzle="done"
+                currentroom="room9"
                 print("You finished the puzzle! The farmer thanks you and says he will leave his boat here tied up in case you need to get back across the river.")
     if reset=="on":
         lshore1=["cabbage", "sheep", "wolf"]
@@ -262,7 +266,7 @@ def room9(proom):
     if proom=="room9":
         pass
     elif proom!="room9":
-        print("You are on the first shore of a river")
+        print("You are on the second shore of a river")
     return directions
     
 def room10(proom):
@@ -274,8 +278,7 @@ def room10(proom):
     return directions
 
 
-#currentroom="room1"
-currentroom="room6"
+currentroom="room1"
 light="off"
 preroom="room1"
 inventory=[]
@@ -283,8 +286,7 @@ motherdoor="no"
 kitchendoor="no"
 maindoor="no"
 reset="off"
-#puzzle="off"
-puzzle="on"
+puzzle="off"
 x="no"
 maiden="girl"
 
@@ -331,6 +333,12 @@ while x==True:
     if currentroom=="room8":
         dirs = room8(preroom)
         preroom="room8"
+    if currentroom=="room9":
+        dirs = room9(preroom)
+        preroom="room9"
+    if currentroom=="room10":
+        dirs = room10(preroom)
+        preroom="room10"
     com=input(">> ")
     moving(com)
     push(com)
